@@ -79,8 +79,10 @@ sect.appendChild(para);
 ```
 
 _Node.appendChild()_ - adds a node to the end of the list of children of a specified parent node. In our case parent node is <select>
-and childs are <img> and <p> elements, so _.appendChild(para)_ will add paragraph to the end of this tree level. 4. Finally let's add a text node to the paragraph the link sits inside, to round off the sentence nicely. We will create
-text node using _Document.createTextNode()_:
+and childs are <img> and <p> elements, so _.appendChild(para)_ will add paragraph to the end of this tree level.
+
+4. Finally let's add a text node to the paragraph the link sits inside, to round off the sentence nicely. We will create
+   text node using _Document.createTextNode()_:
 
 ```
 const text = document.createTextNode(" - the premier source for web development knowledge.",);
@@ -92,3 +94,7 @@ const text = document.createTextNode(" - the premier source for web development 
 const linkPara = document.querySelector('p');
 linkPara.appendChild(text);
 ```
+
+How the final DOM will looks like:
+
+![Final DOM](Manupulating_Documents/src/DOM_Manipulation/imgs/FinalDOM.png)
