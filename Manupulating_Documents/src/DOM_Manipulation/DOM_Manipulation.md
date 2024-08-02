@@ -97,4 +97,6 @@ linkPara.appendChild(text);
 
 How the final DOM will looks like:
 
-![Final DOM](Manupulating_Documents/src/DOM_Manipulation/imgs/FinalDOM.png)
+![Final DOM](imgs/FinalDOM.png)
+
+# Moving and removing elements
