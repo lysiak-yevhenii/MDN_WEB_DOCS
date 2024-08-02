@@ -78,8 +78,8 @@ para.textContent = "We hope you enjoyed the ride.";
 sect.appendChild(para);
 ```
 
-_Node.appendChild()_ - adds a node to the end of the list of children of a specified parent node. In our case parent node is <select>
-and childs are <img> and <p> elements, so _.appendChild(para)_ will add paragraph to the end of this tree level.
+The _Node.appendChild()_ - adds a node to the end of the list of children of a specified parent node. In our case parent node is `<select>`
+and childs are `<img>` and `<p>` elements, so _Node.appendChild(para)_ will add paragraph to the end of this tree level.
 
 4. Finally let's add a text node to the paragraph the link sits inside, to round off the sentence nicely. We will create
    text node using _Document.createTextNode()_:
