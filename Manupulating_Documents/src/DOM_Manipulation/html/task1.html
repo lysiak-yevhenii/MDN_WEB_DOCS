@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping list example</title>
+  <style>
+    li {
+      margin-bottom: 10px;
+    }
+
+    li button {
+      font-size: 12px;
+      margin-left: 20px;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>My shopping list</h1>
+
+  <form>
+    <label for="item">Enter a new item:</label>
+    <input type="text" name="item" value="" id="item">
+    <button type="submit">Add item</button>
+  </form>
+
+  <ul>
+
+  </ul>
+
+  <script>
+    const unorderedlist = document.querySelector('ul');
+    const input = document.querySelector('#item');
+    const button = document.querySelector('button');
+    const form = document.querySelector('form');
+
+    const handleFormSubmit = (event) => {
+      console.log('Form submitted!');
+      const value = event.currentTarget.item.value;
+      input.value = '';
+
+      const liElement = document.createElement('li');
+      const spanElement = document.createElement('span');
+      const buttonElement = document.createElement('button');
+
+      spanElement.textContent = value;
+      buttonElement.textContent = 'Delete';
+
+      spanElement.appendChild(buttonElement);
+      liElement.appendChild(spanElement);
+      unorderedlist.appendChild(liElement);
+
+      buttonElement.addEventListener('click', () => {
+        unorderedlist.removeChild(liElement);
+      });
+
+      console.log(event.currentTarget.item.value);
+      event.preventDefault();
+    }
+
+    const handleButtonClick = (event) => {
+      console.log('Button clicked');
+    }
+
+    form.addEventListener('submit', handleFormSubmit);
+    button.addEventListener('click', handleButtonClick);
+    input.focus();
+  </script>
+</body>
+
+</html>
