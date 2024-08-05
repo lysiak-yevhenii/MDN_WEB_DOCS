@@ -114,3 +114,34 @@ _sect.removeChild(linkPare)_ - if you have a reference to the node, you can easi
 _linkPara.remove()_ - when you want to remove node based only in a reference to itself (this method not
 supported by older browsers). But old browsers support next construction:
 to delete through the parent ref. _linkPara.parentNode.removeChild(linkPara)_.
+
+# Manipulating styles
+
+There is variety of approacher to get and manipulate the styles. One of them is to use _Document.stylesheets_,
+which returns an array-like object with _CSSStyleSheet_ objects. You can then add/remove styles as whished.
+
+Add inline styles directly onto elements you want to dynamically style. To do so use _HTMLElement.style_ property,
+which contains inline styling information for each element in the document. You can set properties of this object to
+directly update element styles:
+
+```
+para.style.color = 'white'
+para.style.backgroundColor = 'black'
+para.style.padding = '10px'
+para.style.width = '100px'
+para.style.textAlign = 'center'
+```
+
+If you apply this way the style. It will looks like an inline style:
+
+```
+<p
+  style="color: white; background-color: black; padding: 10px; width: 250px; text-align: center;">
+  We hope you enjoyed the ride.
+</p>
+```
+
+Another common way to dynamically manipulate styles on your document is usage of attribute attachment.
+Let's imagine you have defined class in CSS called 'highlight' with style defined there. You can use
+next: _para.setAttribute('class','highlight')_ and it will add class to the para element, and as result
+it will apply highligh style.
