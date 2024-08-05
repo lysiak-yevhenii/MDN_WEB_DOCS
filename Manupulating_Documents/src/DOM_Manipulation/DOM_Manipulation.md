@@ -100,3 +100,17 @@ How the final DOM will looks like:
 ![Final DOM](imgs/FinalDOM.png)
 
 # Moving and removing elements
+
+## Moving
+
+_sect.appendChild(linkPara)_ - will move the paragraph with link inside it to the bottom of the section.
+you might have thought it would make a second copy of it, but not the case - linkPara is reference to the
+one and only copy of that paragraph.
+_Node.cloneNode()_ - if you want to make a copy, you need to use that method.
+
+## Removing
+
+_sect.removeChild(linkPare)_ - if you have a reference to the node, you can easily remove node from parent.
+_linkPara.remove()_ - when you want to remove node based only in a reference to itself (this method not
+supported by older browsers). But old browsers support next construction:
+to delete through the parent ref. _linkPara.parentNode.removeChild(linkPara)_.
