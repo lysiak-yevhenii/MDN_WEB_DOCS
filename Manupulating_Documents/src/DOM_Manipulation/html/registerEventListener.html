@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Listener Example</title>
+</head>
+
+<body>
+  <button id="myButton">Click me</button>
+
+  <script>
+    const button = document.getElementById('myButton');
+
+    // First listener
+    button.addEventListener('click', function firstListener (event) {
+      console.log('First listener triggered');
+
+      // Adding a new listener inside the first listener
+      button.addEventListener('click', function secondListener (event) {
+        console.log('Second listener triggered');
+      });
+    });
+
+  </script>
+</body>
+
+</html>
