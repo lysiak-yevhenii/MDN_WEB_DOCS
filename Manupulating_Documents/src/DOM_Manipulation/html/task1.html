@@ -40,7 +40,9 @@
 
     const handleFormSubmit = (event) => {
       console.log('Form submitted!');
+      // This value works with inner scope
       const value = event.currentTarget.item.value;
+      // This input from outter scope
       input.value = '';
 
       const liElement = document.createElement('li');
@@ -50,15 +52,19 @@
       spanElement.textContent = value;
       buttonElement.textContent = 'Delete';
 
-      spanElement.appendChild(buttonElement);
-      liElement.appendChild(spanElement);
+      // Order of adding doesn't matter because we works with links
       unorderedlist.appendChild(liElement);
+      liElement.appendChild(spanElement);
+      spanElement.appendChild(buttonElement);
 
       buttonElement.addEventListener('click', () => {
         unorderedlist.removeChild(liElement);
       });
 
       console.log(event.currentTarget.item.value);
+      // Back focus to input element
+      input.focus();
+      // Preventing default submit behaviour 
       event.preventDefault();
     }
 
@@ -68,7 +74,6 @@
 
     form.addEventListener('submit', handleFormSubmit);
     button.addEventListener('click', handleButtonClick);
-    input.focus();
   </script>
 </body>
 
