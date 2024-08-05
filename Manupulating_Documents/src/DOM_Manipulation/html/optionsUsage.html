@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple DOM example</title>
+  <style>
+    .outer,
+    .middle,
+    .inner1,
+    .inner2 {
+      display: block;
+      width: 520px;
+      padding: 15px;
+      margin: 15px;
+      text-decoration: none;
+    }
+
+    .outer {
+      border: 1px solid red;
+      color: red;
+    }
+
+    .middle {
+      border: 1px solid green;
+      color: green;
+      width: 460px;
+    }
+
+    .inner1,
+    .inner2 {
+      border: 1px solid purple;
+      color: purple;
+      width: 400px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="outer">
+    outer, once & none-once
+    <div class="middle" target="_blank">
+      middle, capture & none-capture
+      <a class="inner1" href="https://www.mozilla.org" target="_blank">
+        inner1, passive & preventDefault(which is not allowed)
+      </a>
+      <a class="inner2" href="https://developer.mozilla.org/" target="_blank">
+        inner2, none-passive & preventDefault(not open new page)
+      </a>
+    </div>
+  </div>
+  <hr />
+  <button class="clear-button">Clear logs</button>
+  <section class="demo-logs"></section>
+
+  <script>
+    const outer = document.querySelector(".outer");
+    const middle = document.querySelector(".middle");
+    const inner1 = document.querySelector(".inner1");
+    const inner2 = document.querySelector(".inner2");
+
+
+    const once = {
+      once: true,
+    };
+    outer.addEventListener("click", onceHandler, once);
+    const noneOnce = {
+      once: false,
+    };
+    outer.addEventListener("click", noneOnceHandler, noneOnce);
+    const capture = {
+      capture: true,
+    };
+    middle.addEventListener("click", captureHandler, capture);
+    const noneCapture = {
+      capture: false,
+    };
+    middle.addEventListener("click", noneCaptureHandler, noneCapture);
+    const passive = {
+      passive: true,
+    };
+    inner1.addEventListener("click", passiveHandler, passive);
+    const nonePassive = {
+      passive: false,
+    };
+    inner2.addEventListener("click", nonePassiveHandler, nonePassive);
+
+    function onceHandler (event) {
+      console.log("outer, once");
+    }
+    function noneOnceHandler (event) {
+      console.log("outer, none-once, default\n");
+    }
+    function captureHandler (event) {
+      //event.stopImmediatePropagation();
+      console.log("middle, capture");
+    }
+    function noneCaptureHandler (event) {
+      console.log("middle, none-capture, default");
+    }
+    function passiveHandler (event) {
+      // Unable to preventDefault inside passive event listener invocation.
+      event.preventDefault();
+      console.log("inner1, passive, open new page");
+    }
+    function nonePassiveHandler (event) {
+      event.preventDefault();
+      //event.stopPropagation();
+      console.log("inner2, none-passive, default, not open new page");
+    }
+
+  </script>
+</body>
+
+</html>
