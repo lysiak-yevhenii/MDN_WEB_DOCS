@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Promise example</title>
+</head>
+
+<body>
+
+  <script>
+    function doSomething () {
+      return new Promise((resolve, reject) => {
+        // Simulate an asynchronous operation
+        setTimeout(() => {
+          const success = Math.random() > 0.5; // Simulate success or failure
+          if (success) {
+            resolve('Operation was successful!');
+          } else {
+            reject('Operation failed.');
+          }
+        }, 1000);
+      });
+    }
+
+    function successCallback (result) {
+      return new Promise((resolve) => {
+        console.log(`Success: ${result}`);
+        // Simulate another asynchronous operation
+        setTimeout(() => {
+          resolve('Success callback completed.');
+        }, 1000);
+      });
+    }
+
+    function failureCallback (error) {
+      return new Promise((resolve) => {
+        console.error(`Error: ${error}`);
+        // Simulate another asynchronous operation
+        setTimeout(() => {
+          resolve('Failure callback completed.');
+        }, 1000);
+      });
+    }
+
+    const promise = doSomething();
+    const promise2 = promise.then(successCallback, failureCallback);
+
+    promise2.then((message) => {
+      console.log(message); // This will log the message from either successCallback or failureCallback
+    });
+
+  </script>
+</body>
+
+</html>
