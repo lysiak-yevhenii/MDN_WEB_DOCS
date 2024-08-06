@@ -211,3 +211,164 @@ doSomething()
     console.log(listOfIngredients);
   });
 ```
+
+### Error handling
+
+The catch block at the end of a Promise chain will only catch the first error that occurs in the chain. It won’t accumulate errors from each then block. If an error occurs at any point in the chain, the catch block will handle that single error and the chain will stop executing further then blocks.
+
+Nesting is a control structure to limit the scope of catch statements. Specifically, a nested catch only catches failures in its scope and below, not errors higher up in the chain outside the nested scope. When used correctly, this gives greater precision in error recovery:
+
+```
+doSomethingCritical()
+  .then((result) =>
+    doSomethingOptional(result)
+      .then((optionalResult) => doSomethingExtraNice(optionalResult))
+      .catch((e) => {}),
+  ) // Ignore if optional stuff fails; proceed.
+  .then(() => moreCriticalStuff())
+  .catch((e) => console.error(`Critical failure: ${e.message}`));
+```
+
+### Chaining after a catch
+
+It's possible to chain after a failure, i.e. a catch, which is useful to accomplish new actions even after an action failed in the chain:
+
+```
+doSomething()
+  .then(() => {
+    throw new Error("Something failed");
+
+    console.log("Do this");
+  })
+  .catch(() => {
+    console.error("Do that");
+  })
+  .then(() => {
+    console.log("Do this, no matter what happened before");
+  });
+```
+
+This will output the following text:
+
+```
+Initial
+Do that
+Do this, no matter what happened before
+```
+
+### Promises and Rejections
+
+When you create a Promise in JavaScript, it can either resolve (success) or reject (failure). If a Promise is rejected and there is no .catch() handler to handle the rejection, the error will “bubble up” the call stack.
+
+“Bubbling up” means that the error will propagate up through the chain of function calls until it reaches the top level of the call stack. If no handler is found to catch the error, it will eventually reach the global context.
+
+The “host” refers to the environment in which your JavaScript code is running, such as a web browser or Node.js. When an unhandled Promise rejection reaches the top of the call stack, the host environment needs to surface it, meaning it needs to notify you about the unhandled error.
+
+```
+function doSomething() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject('Error in doSomething');
+    }, 1000);
+  });
+}
+
+doSomething();
+
+// No .catch() handler here
+```
+
+In this example, the Promise returned by doSomething is rejected, but there is no .catch() handler to catch the error. As a result, the rejection bubbles up to the top of the call stack. You can see
+it in dev-console.
+
+Surfacing the Error In a web browser, an unhandled Promise rejection will typically result in an error message being logged to the console. In Node.js, it will emit an unhandledRejection event, which you can listen for and handle if needed.
+
+To avoid unhandled Promise rejections, always include a .catch() handler at the end of your Promise chains:
+
+```
+doSomething()
+  .catch(error => {
+    console.error('Caught error:', error);
+  });
+```
+
+This ensures that any errors are properly handled and do not bubble up to the top of the call stack.
+
+On the web, whenever a promise is rejected, one of two events is sent to the global scope (generally, this is either the window or, if being used in a web worker, it's the Worker or other worker-based interface). The two events are:
+
+_unhandledrejection_
+Sent when a promise is rejected but there is no rejection handler available.
+
+_rejectionhandled_
+Sent when a handler is attached to a rejected promise that has already caused an unhandledrejection event.
+
+In both cases, the event (of type PromiseRejectionEvent) has as members a promise property indicating the promise that was rejected, and a reason property that provides the reason given for the promise to be rejected.
+
+In Node.js, handling promise rejection is slightly different. You capture unhandled rejections by adding a handler for the Node.js unhandledRejection event (notice the difference in capitalization of the name), like this:
+
+```
+process.on("unhandledRejection", (reason, promise) => {
+  // Add code here to examine the "promise" and "reason" values
+});
+```
+
+For Node.js, to prevent the error from being logged to the console (the default action that would otherwise occur), adding that process.on() listener is all that's necessary; there's no need for an equivalent of the browser runtime's preventDefault() method.
+
+However, if you add that process.on listener but don't also have code within it to handle rejected promises, they will just be dropped on the floor and silently ignored. So ideally, you should add code within that listener to examine each rejected promise and make sure it was not caused by an actual code bug.
+
+### Handling Unhandled Rejections in the Browser
+
+You can add an event listener for the unhandledrejection event on the window object. This event is fired whenever a Promise is rejected and the rejection is not handled by a .catch() block.
+
+```
+function doSomething() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject('Error in doSomething');
+    }, 1000);
+  });
+}
+
+// No .catch() handler here
+doSomething();
+
+window.addEventListener('unhandledrejection', (event) => {
+  console.error('Unhandled rejection:', event.reason);
+  // You can add additional handling logic here
+});
+```
+
+In this example:
+
+The doSomething function returns a Promise that is rejected after 1 second.
+Since there is no .catch() handler for the Promise, the unhandledrejection event is fired.
+The event listener logs the error to the console.
+
+You cannot access the Promise properties state and result.
+
+Tracking Promise State
+
+```
+function getPromiseState(promise) {
+  const t = {};
+  return Promise.race([promise, t])
+    .then(v => (v === t) ? 'pending' : 'fulfilled', () => 'rejected');
+}
+
+// Example usage
+const promise1 = new Promise((resolve, reject) => {
+  setTimeout(resolve, 1000);
+});
+
+const promise2 = new Promise((resolve, reject) => {
+  setTimeout(reject, 1000);
+});
+
+const promise3 = new Promise((resolve, reject) => {
+  // This promise will remain pending
+});
+
+getPromiseState(promise1).then(state => console.log(`promise1 is ${state}`)); // pending, then fulfilled
+getPromiseState(promise2).then(state => console.log(`promise2 is ${state}`)); // pending, then rejected
+getPromiseState(promise3).then(state => console.log(`promise3 is ${state}`)); // pending
+```
