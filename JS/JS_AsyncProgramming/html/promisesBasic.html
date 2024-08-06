@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Promise example</title>
+</head>
+
+<body>
+
+  <script>
+    const audioSettingsR = { format: 'mp3', bitrate: 128 };
+
+    const createAudioFileAsync = (audioSettings) => new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const success = Math.random() > 0.5;
+        success ? resolve(audioSettings.format) : reject('Something else');
+      }, 1000);
+    });
+
+    createAudioFileAsync(audioSettingsR)
+      .then(resolve => console.log('result of the:' + resolve))
+      .catch(error => console.log('error of the: ' + error));
+
+  </script>
+</body>
+
+</html>
