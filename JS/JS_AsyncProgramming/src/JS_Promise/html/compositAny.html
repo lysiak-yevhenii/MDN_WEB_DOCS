@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Promise example</title>
+</head>
+
+<body>
+
+  <script>
+    const promise1 = new Promise((resolve, reject) => {
+      setTimeout(reject, 1000, 'Promise 1 rejected');
+    });
+
+    const promise2 = new Promise((resolve, reject) => {
+      setTimeout(resolve, 2000, 'Promise 2 resolved');
+    });
+
+    const promise3 = new Promise((resolve, reject) => {
+      setTimeout(resolve, 2500, 'Promise 2 resolved');
+    });
+
+    const promise4 = new Promise((resolve, reject) => {
+      setTimeout(resolve, 3000, 'Promise 3 resolved');
+    });
+
+    Promise.any([promise1, promise2, promise3, promise4])
+      .then(result => {
+        console.log('First resolved promise:', result);
+      })
+      .catch(error => {
+        console.error('All promises were rejected:', error.errors);
+      });
+
+  </script>
+</body>
+
+</html>

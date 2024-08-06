@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Promise example</title>
+</head>
+
+<body>
+
+  <script>
+    const promise1 = Promise.resolve(3);
+    const promise2 = 42;
+    const promise3 = new Promise((resolve, reject) => {
+      setTimeout(resolve, 100, 'foo');
+    });
+    const promise4 = new Promise((resolve, reject) => {
+      setTimeout(reject('rejected'), 1000);
+    })
+
+    Promise.all([promise1, promise2, promise3]).then((values) => {
+      console.log(values);
+    });
+
+    // Concrete usage of output
+    Promise.all([promise1, promise2, promise3]).then(([result1, result2, result3]) => {
+      console.log(result1);
+      console.log(result2);
+      console.log(result3);
+    });
+
+    Promise.all([promise1, promise2, promise4]).then((values) => {
+      console.log(values);
+    })
+      .catch(error =>
+        console.log(error)
+      );
+  </script>
+</body>
+
+</html>

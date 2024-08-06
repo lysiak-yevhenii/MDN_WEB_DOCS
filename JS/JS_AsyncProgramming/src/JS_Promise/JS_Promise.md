@@ -372,3 +372,116 @@ getPromiseState(promise1).then(state => console.log(`promise1 is ${state}`)); //
 getPromiseState(promise2).then(state => console.log(`promise2 is ${state}`)); // pending, then rejected
 getPromiseState(promise3).then(state => console.log(`promise3 is ${state}`)); // pending
 ```
+
+## Composition
+
+There are four composition tools for running asynchronous operations concurrently:
+
+- Promise.all() - expect that all promises will be successfuly handled, otherwise will return rejection. In Promise.all, the sequence of the results is respected. This means that the results array will maintain the order of the Promises as they were passed into Promise.all, regardless of the order in which the Promises resolve. Example of usage:
+  Promise.all([func1(), func2(), func3()]).then(([result1, result2, result3]) => {
+  // use result1, result2 and result3
+  });
+
+  - Promise.all
+    Behavior: Waits for all Promises to either resolve or for any one of them to reject.
+    Outcome: If all Promises resolve, it returns an array of their results. If any Promise rejects, it immediately rejects with the reason of the first rejected Promise.
+    Use Case: Use Promise.all when you need all Promises to succeed and want to handle a single failure case.
+
+```
+const promise1 = Promise.resolve('Promise 1 resolved');
+const promise2 = Promise.resolve('Promise 2 resolved');
+const promise3 = Promise.reject('Promise 3 rejected');
+
+Promise.all([promise1, promise2, promise3])
+  .then(results => {
+    console.log('All promises resolved:', results);
+  })
+  .catch(error => {
+    console.error('One or more promises rejected:', error);
+  });
+```
+
+- Promise.allSettled() - The Promise.allSettled() static method takes an iterable of promises as input and returns a single Promise. This returned promise fulfills when all of the input's promises settle (including when an empty iterable is passed), with an array of objects that describe the outcome of each promise.
+
+  - Promise.allSettled
+    Behavior: Waits for all Promises to settle (either resolve or reject).
+    Outcome: Returns an array of objects describing the outcome of each Promise, regardless of whether they resolved or rejected.
+    Use Case: Use Promise.allSettled when you want to know the outcome of all Promises, regardless of whether they succeeded or failed.
+
+```
+const promise1 = Promise.resolve('Promise 1 resolved');
+const promise2 = Promise.resolve('Promise 2 resolved');
+const promise3 = Promise.reject('Promise 3 rejected');
+
+Promise.allSettled([promise1, promise2, promise3])
+  .then(results => {
+    results.forEach((result, index) => {
+      if (result.status === 'fulfilled') {
+        console.log(`Promise ${index + 1} fulfilled with value: ${result.value}`);
+      } else {
+        console.log(`Promise ${index + 1} rejected with reason: ${result.reason}`);
+      }
+    });
+  });
+```
+
+- Promise.any() - static method takes an iterable of promises as input and returns a single Promise. This returned promise fulfills when any of the input's promises fulfills, with this first fulfillment value. It rejects when all of the input's promises reject (including when an empty iterable is passed), with an AggregateError containing an array of rejection reasons.
+
+  - Promise.any() - It is designed to return the first Promise that resolves successfully, ignoring any rejections. If all Promises are rejected, it will reject with an AggregateError containing all the rejection reasons.
+
+```
+const promise1 = new Promise((resolve, reject) => {
+  setTimeout(reject, 1000, 'Promise 1 rejected');
+});
+
+const promise2 = new Promise((resolve, reject) => {
+  setTimeout(resolve, 2000, 'Promise 2 resolved');
+});
+
+const promise3 = new Promise((resolve, reject) => {
+  setTimeout(resolve, 3000, 'Promise 3 resolved');
+});
+
+Promise.any([promise1, promise2, promise3])
+  .then(result => {
+    console.log('First resolved promise:', result);
+  })
+  .catch(error => {
+    console.error('All promises were rejected:', error.errors);
+  });
+```
+
+promise1 is rejected after 1 second.
+promise2 is resolved after 2 seconds.
+promise3 is resolved after 3 seconds.
+In this example, Promise.any will return the result of promise2 because it is the first Promise to resolve successfully. So _.any()_ return the first successfuly resolved promise.
+If all Promises were to be rejected, the catch block would handle the AggregateError, which contains an array of all rejection reasons. This method is particularly useful when you have multiple potential sources of success and you only need one to proceed.
+
+- Promise.race() - will return only first promise whether it was successfully processed or rejected.
+
+  - Promise.race
+    Behavior: Waits for the first Promise to settle (either resolve or reject).
+    Outcome: Returns the value of the first settled Promise, whether it is resolved or rejected.
+    Use Case: Use Promise.race when you need to act on the first Promise that settles, regardless of whether it resolves or rejects.
+
+```
+const promise1 = new Promise((resolve, reject) => {
+  setTimeout(reject, 1000, 'Promise 1 rejected');
+});
+
+const promise2 = new Promise((resolve, reject) => {
+  setTimeout(resolve, 2000, 'Promise 2 resolved');
+});
+
+const promise3 = new Promise((resolve, reject) => {
+  setTimeout(resolve, 3000, 'Promise 3 resolved');
+});
+
+Promise.race([promise1, promise2, promise3])
+  .then(result => {
+    console.log('First settled promise:', result);
+  })
+  .catch(error => {
+    console.error('First settled promise rejected:', error);
+  });
+```

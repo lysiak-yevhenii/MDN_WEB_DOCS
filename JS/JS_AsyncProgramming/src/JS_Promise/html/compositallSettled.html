@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Promise example</title>
+</head>
+
+<body>
+
+  <script>
+    const promise1 = Promise.resolve(3);
+    const promise2 = new Promise((resolve, reject) =>
+      setTimeout(reject, 1000, 'foo'),
+    );
+    const promises = [promise1, promise2];
+
+    Promise.allSettled(promises).then((results) =>
+      results.forEach((result) => console.log(result.status + JSON.stringify(result))),
+    );
+
+  </script>
+</body>
+
+</html>
