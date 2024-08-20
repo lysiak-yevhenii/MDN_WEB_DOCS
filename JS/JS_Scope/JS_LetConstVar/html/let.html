@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+</head>
+
+<body>
+  <script>
+    let num = 10;
+
+    function getNum () {
+      console.log(num); // #1
+
+      if (true) {
+        let num = 20;
+      }
+
+      console.log(num); // #2
+    }
+
+    getNum();
+    // Why ? let is block-scoped, declaring let num in if block keep the num in scope of block {}
+    // Result will be 10 and 10
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+<html lang="en">
+<div class="outerDiv">
+  <button class="myButton">Click me!</button>
+</div>
+<script>
+  function displayInnerMessage (ev) {
+    console.log('Inner Message');
+  }
+
+  function displayOuterMessage (ev) {
+    console.log('Outer Message');
+  }
+
+  window.onload = (event) => {
+    document.querySelector('.myButton')
+      .addEventListener('click', displayInnerMessage, true);
+    document.querySelector('.outerDiv')
+      .addEventListener('click', displayOuterMessage, true);
+
+  }
+</script>
+
+</html>

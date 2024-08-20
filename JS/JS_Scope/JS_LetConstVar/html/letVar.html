@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+</head>
+
+<body>
+  <script>
+    for (var i = 0; i < 3; i++) {
+      setTimeout(() => console.log(i + 'var'), 1);
+    }
+
+    for (let i = 0; i < 3; i++) {
+      setTimeout(() => console.log(i + 'let'), 1);
+    }
+
+    // Result will be 3 times 3
+    // 0, 1, 2
+    // Why ? let is block-scoped, meaning each iteration of the loop has its own separate i
+    // var is function-scoped, meaning the variable i is shared across all iterations of the loop.
+  </script>
+</body>
+
+</html>
